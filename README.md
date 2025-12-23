@@ -11,6 +11,7 @@ Proiectul centralizeaza date COVID-19 (sursa OWID) si defineste o schema relatio
 - `db/etl/` – scripturi ETL si `requirements.txt` pentru Python.
 - `owid-covid-data.csv` – setul de date OWID (Our World in Data) folosit la incarcare.
 - `db_barrel/` – utilitar optional pentru vizualizarea topologiei si schemelor PostgreSQL (nu este necesar pentru incarcare/analiza datelor).
+- `.env` – variabilele de conexiune PostgreSQL folosite de ETL (PGHOST, PGPORT, PGUSER, PGPASSWORD, PGDATABASE, PGSSLMODE, PGSSLROOTCERT).
 
 ## Seturi de date
 - OWID COVID-19 (`owid-covid-data.csv`)
@@ -59,5 +60,18 @@ Tabele:
 
 ## Script ETL
 
-- `db/etl/load_owid.py` — script Python care incarca CSV-ul in PostgreSQL (schema `covid`), folosind variabile din `.env` (PGHOST, PGPORT, PGUSER, PGPASSWORD, PGDATABASE, optional PGSSLMODE, PGSSLROOTCERT); efectueaza staging, deduplicare pe (`iso_code`, `date`) si upsert in tabelele `locatii`, `cazuri_zilnice`, `testari_zilnice`, `vaccinari_zilnice`, `spitalizari_zilnice`, `mortalitate_exces_zilnica`.
-- `db/etl/gen_env_from_topology.py` — genereaza `.env` pe baza `db_barrel/topology.json` (ia prima conexiune din `databases`; suporta `--index` si `--dbname` pentru suprascriere).
+- `db/etl/load_owid.py` — script Python care incarca CSV-ul in PostgreSQL (schema `covid`), citind configurarea din `.env`; efectueaza staging, deduplicare pe (`iso_code`, `date`) si upsert in tabelele `locatii`, `cazuri_zilnice`, `testari_zilnice`, `vaccinari_zilnice`, `spitalizari_zilnice`, `mortalitate_exces_zilnica`.
+
+## Rulare ETL
+
+1. Instaleaza dependintele Python:
+   ```bash
+   python3 -m venv .venv
+   . .venv/bin/activate
+   pip install -r db/etl/requirements.txt
+   ```
+2. Verifica `.env` (valori implicite setate pentru conexiune la BD; modifica la nevoie `PGDATABASE`, `PGHOST`, etc.).
+3. Ruleaza incarcarea:
+   ```bash
+   python db/etl/load_owid.py --csv-path owid-covid-data.csv
+   ```
