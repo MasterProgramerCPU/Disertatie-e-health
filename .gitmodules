@@ -1,0 +1,3 @@
+[submodule "db_barrel"]
+	path = db_barrel
+	url = git@github.com:MasterProgramerCPU/db_barrel.git
