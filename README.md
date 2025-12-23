@@ -8,6 +8,7 @@ Proiectul centralizeaza date COVID-19 (sursa OWID) si defineste o schema relatio
 
 ## Structura repository
 - `db/schema.sql` – schema BD in limba romana (PostgreSQL), fara indexuri/comentarii.
+- `db/etl/` – scripturi ETL si `requirements.txt` pentru Python.
 - `owid-covid-data.csv` – setul de date OWID (Our World in Data) folosit la incarcare.
 - `db_barrel/` – utilitar optional pentru vizualizarea topologiei si schemelor PostgreSQL (nu este necesar pentru incarcare/analiza datelor).
 
@@ -56,4 +57,7 @@ Tabele:
 
 
 
+## Script ETL
 
+- `db/etl/load_owid.py` — script Python care incarca CSV-ul in PostgreSQL (schema `covid`), folosind variabile din `.env` (PGHOST, PGPORT, PGUSER, PGPASSWORD, PGDATABASE, optional PGSSLMODE, PGSSLROOTCERT); efectueaza staging, deduplicare pe (`iso_code`, `date`) si upsert in tabelele `locatii`, `cazuri_zilnice`, `testari_zilnice`, `vaccinari_zilnice`, `spitalizari_zilnice`, `mortalitate_exces_zilnica`.
+- `db/etl/gen_env_from_topology.py` — genereaza `.env` pe baza `db_barrel/topology.json` (ia prima conexiune din `databases`; suporta `--index` si `--dbname` pentru suprascriere).
