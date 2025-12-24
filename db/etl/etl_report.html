@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Raport ETL OWID</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root { --bg:#0b1220; --panel:#0f172a; --border:#1f2937; --text:#e5e7eb; --muted:#94a3b8; }
+    * { box-sizing:border-box; }
+    body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin:0; color:var(--text); background: radial-gradient(1200px 600px at 10% -20%, #0b5, transparent), radial-gradient(1000px 800px at 120% -10%, #09f, transparent), var(--bg); }
+    header { padding:24px; border-bottom:1px solid var(--border); background:linear-gradient(90deg, rgba(34,197,94,.14), rgba(56,189,248,.12)); }
+    h1 { font-size:24px; margin:0; letter-spacing:.2px; }
+    main { padding:24px; }
+    h2 { font-size:16px; margin:16px 0 8px; color:var(--muted); font-weight:600; }
+    .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(320px,1fr)); gap:16px; }
+    .panel { background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:16px; box-shadow:0 6px 20px rgba(0,0,0,.28); }
+    table { border-collapse:collapse; width:100%; background:var(--panel); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+    th, td { border-bottom:1px solid var(--border); padding:10px 12px; font-size:14px; }
+    th { background:rgba(255,255,255,.04); text-align:left; color:var(--muted); font-weight:600; }
+    .kpis { display:grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap:12px; margin: 12px 0 20px; }
+    .kpi { background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:14px 16px; box-shadow:0 6px 18px rgba(0,0,0,.25); }
+    .small { color:var(--muted); font-size:12px; margin-bottom:6px; }
+    .value { font-weight:600; font-size:16px; letter-spacing:.2px; }
+    canvas { background:transparent; border:1px solid var(--border); border-radius:12px; padding:8px; }
+  </style>
+</head>
+<body>
+  <header><h1>Raport ETL OWID</h1></header>
+  <main>
+    <div class="kpis">
+      <div class="kpi"><div class="small">Start ETL</div><div class="value">2025-12-24T12:02:04</div></div>
+      <div class="kpi"><div class="small">Final ETL</div><div class="value">2025-12-24T12:45:05</div></div>
+      <div class="kpi"><div class="small">Durata</div><div class="value">2580.65s</div></div>
+      <div class="kpi"><div class="small">Linii procesate</div><div class="value">429,435 / 429,435</div></div>
+      <div class="kpi"><div class="small">Viteza COPY</div><div class="value">7,414 linii/s</div></div>
+      <div class="kpi"><div class="small">Debit COPY</div><div class="value">1.70 MB/s</div></div>
+      <div class="kpi"><div class="small">Dimensiune fisier</div><div class="value">98.39 MB</div></div>
+    </div>
+
+    <div class="grid" style="margin-bottom:16px">
+      <div class="panel">
+        <div class="small">Durate etape (secunde)</div>
+        <canvas id="stagesChart"></canvas>
+      </div>
+      <div class="panel">
+        <div class="small">Impartire timp pe faze</div>
+        <canvas id="phasesChart"></canvas>
+      </div>
+      <div class="panel">
+        <div class="small">Upserts (insertari vs actualizari)</div>
+        <canvas id="upsertsChart"></canvas>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="panel">
+        <h2>Etape</h2>
+        <table>
+          <thead><tr><th>Etapa</th><th>Durata</th></tr></thead>
+          <tbody><tr><td>Create staging</td><td>0.67s</td></tr><tr><td>COPY</td><td>57.98s</td></tr><tr><td>Dedup</td><td>15.22s</td></tr><tr><td>Drop staging</td><td>3.00s</td></tr><tr><td>Commit</td><td>0.03s</td></tr><tr><td>Total</td><td>77.07s</td></tr></tbody>
+        </table>
+        <h2 style="margin-top:16px">COPY & Dedup</h2>
+        <table>
+          <thead><tr><th>Indicator</th><th>Valoare</th></tr></thead>
+          <tbody><tr><td>Linii procesate</td><td>429,435 din 429,435</td></tr><tr><td>Durata COPY</td><td>57.92s</td></tr><tr><td>Linii/s</td><td>7,414</td></tr><tr><td>MB/s</td><td>1.70</td></tr><tr><td>Dimensiune fisier</td><td>98.39 MB</td></tr><tr><td>Randuri staging</td><td>429,435</td></tr><tr><td>Randuri dupa dedup</td><td>421,665</td></tr><tr><td>Retentie dupa dedup</td><td>98.2%</td></tr></tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <h2>Upserts</h2>
+        <table>
+          <thead><tr><th>Tabel</th><th>Insertari</th><th>Actualizari</th><th>Durata</th><th>Total dupa</th></tr></thead>
+          <tbody><tr><td>locatii</td><td>0</td><td>255</td><td>1.42s</td><td>255</td></tr><tr><td>cazuri_zilnice</td><td>0</td><td>421,665</td><td>719.93s</td><td>421,665</td></tr><tr><td>testari_zilnice</td><td>0</td><td>421,665</td><td>470.14s</td><td>421,665</td></tr><tr><td>vaccinari_zilnice</td><td>0</td><td>421,665</td><td>489.01s</td><td>421,665</td></tr><tr><td>spitalizari_zilnice</td><td>0</td><td>421,665</td><td>416.90s</td><td>421,665</td></tr><tr><td>mortalitate_exces_zilnica</td><td>0</td><td>421,665</td><td>327.69s</td><td>421,665</td></tr></tbody>
+        </table>
+        <h2 style="margin-top:16px">Tabele finale</h2>
+        <table>
+          <thead><tr><th>Tabel</th><th>Randuri</th></tr></thead>
+          <tbody><tr><td style='color:#94a3b8'>locatii</td><td><b>255</b></td></tr><tr><td style='color:#94a3b8'>cazuri</td><td><b>421,665</b></td></tr><tr><td style='color:#94a3b8'>testari</td><td><b>421,665</b></td></tr><tr><td style='color:#94a3b8'>vaccinari</td><td><b>421,665</b></td></tr><tr><td style='color:#94a3b8'>spitalizari</td><td><b>421,665</b></td></tr><tr><td style='color:#94a3b8'>mortalitate_exces</td><td><b>421,665</b></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const stageLabels = ["COPY", "Dedup", "Drop staging", "Create staging", "Commit"];
+    const stageData = [57.98, 15.22, 3.0, 0.67, 0.03];
+    const phaseLabels = ["COPY", "Dedup", "Upserts", "Commit"];
+    const phaseData = [57.98, 15.22, 2423.68, 0.03];
+    const upTables = ["locatii", "cazuri", "testari", "vaccinari", "spitalizari", "mortalitate"];
+    const upIns = [0, 0, 0, 0, 0, 0];
+    const upUpd = [255, 421665, 421665, 421665, 421665, 421665];
+
+    new Chart(document.getElementById('stagesChart'), {
+      type: 'bar',
+      data: { labels: stageLabels, datasets: [{ label: 'secunde', data: stageData, backgroundColor: '#60a5fa' }] },
+      options: { responsive: true, indexAxis: 'y', plugins: { legend: { display: false } } }
+    });
+
+    new Chart(document.getElementById('phasesChart'), {
+      type: 'doughnut',
+      data: { labels: phaseLabels, datasets: [{ data: phaseData, backgroundColor: ['#38bdf8','#34d399','#fbbf24','#a78bfa'] }] },
+      options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+    });
+
+    new Chart(document.getElementById('upsertsChart'), {
+      type: 'bar',
+      data: {
+        labels: upTables,
+        datasets: [
+          { label: 'insertari', data: upIns, backgroundColor: '#22c55e' },
+          { label: 'actualizari', data: upUpd, backgroundColor: '#f59e0b' }
+        ]
+      },
+      options: { responsive: true, scales: { x: { stacked: true }, y: { stacked: true } } }
+    });
+  </script>
+</body>
+</html>
