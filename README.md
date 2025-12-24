@@ -9,9 +9,9 @@ Proiectul centralizeaza date COVID-19 (sursa OWID) si defineste o schema relatio
 ## Structura repository
 - `db/schema.sql` – schema BD in limba romana (PostgreSQL), fara indexuri/comentarii.
 - `db/etl/` – scripturi ETL si `requirements.txt` pentru Python.
-- `owid-covid-data.csv` – setul de date OWID (Our World in Data) folosit la incarcare.
+- `db/owid-covid-data.csv` – setul de date OWID (Our World in Data) folosit la incarcare.
 - `db_barrel/` – utilitar optional pentru vizualizarea topologiei si schemelor PostgreSQL (nu este necesar pentru incarcare/analiza datelor).
-- `.env` – variabilele de conexiune PostgreSQL folosite de ETL (PGHOST, PGPORT, PGUSER, PGPASSWORD, PGDATABASE, PGSSLMODE, PGSSLROOTCERT).
+- `.env` – configuratia pentru ETL si conexiune PostgreSQL: PGHOST, PGPORT, PGUSER, PGPASSWORD, PGDATABASE, PGSSLMODE, PGSSLROOTCERT, plus CSV_PATH, COVID_SCHEMA, ETL_REPORT_PATH si optional KEEP_STAGING.
 
 ## Seturi de date
 - OWID COVID-19 (`owid-covid-data.csv`)
@@ -60,7 +60,7 @@ Tabele:
 
 ## Script ETL
 
-- `db/etl/load_owid.py` — script Python care incarca CSV-ul in PostgreSQL (schema `covid`), citind configurarea din `.env`; efectueaza staging, deduplicare pe (`iso_code`, `date`) si upsert in tabelele `locatii`, `cazuri_zilnice`, `testari_zilnice`, `vaccinari_zilnice`, `spitalizari_zilnice`, `mortalitate_exces_zilnica`.
+- `db/etl/etl_ingress.py` — script Python care incarca CSV-ul in PostgreSQL (schema `covid`), citind configurarea din `.env`; efectueaza staging, deduplicare pe (`iso_code`, `date`) si upsert in tabelele `locatii`, `cazuri_zilnice`, `testari_zilnice`, `vaccinari_zilnice`, `spitalizari_zilnice`, `mortalitate_exces_zilnica`. Afiseaza progresul si un raport de performanta (HTML cu tabele si grafice) la final.
 
 ## Rulare ETL
 
@@ -70,8 +70,12 @@ Tabele:
    . .venv/bin/activate
    pip install -r db/etl/requirements.txt
    ```
-2. Verifica `.env` (valori implicite setate pentru conexiune la BD; modifica la nevoie `PGDATABASE`, `PGHOST`, etc.).
-3. Ruleaza incarcarea:
+2. Configureaza `.env` (exista un fisier pre-populat):
+   - Conexiune: `PGHOST`, `PGPORT`, `PGUSER`, `PGPASSWORD`, `PGDATABASE`, optional `PGSSLMODE`, `PGSSLROOTCERT`.
+   - Incarcare/raport: `CSV_PATH` (ex. `owid-covid-data.csv`), `COVID_SCHEMA` (ex. `covid`), `ETL_REPORT_PATH` (ex. `etl_report.html`), optional `KEEP_STAGING=1` pentru a pastra staging-ul.
+3. Ruleaza incarcarea (fara argumente CLI, scriptul citeste doar `.env` din `db/etl/`):
    ```bash
-   python db/etl/load_owid.py --csv-path owid-covid-data.csv
+   cd db/etl
+   python etl_ingress.py
    ```
+4. Deschide raportul HTML generat (definit de `ETL_REPORT_PATH`; implicit `etl_report.html` in `db/etl/`).
