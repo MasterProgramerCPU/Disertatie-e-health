@@ -32,12 +32,12 @@
   <header><h1>Raport ETL OWID</h1></header>
   <main>
     <div class="kpis">
-      <div class="kpi"><div class="small">Start ETL</div><div class="value">2025-12-24T12:02:04</div></div>
-      <div class="kpi"><div class="small">Final ETL</div><div class="value">2025-12-24T12:45:05</div></div>
-      <div class="kpi"><div class="small">Durata</div><div class="value">2580.65s</div></div>
+      <div class="kpi"><div class="small">Start ETL</div><div class="value">2026-01-06T11:12:56</div></div>
+      <div class="kpi"><div class="small">Final ETL</div><div class="value">2026-01-06T11:20:21</div></div>
+      <div class="kpi"><div class="small">Durata</div><div class="value">445.14s</div></div>
       <div class="kpi"><div class="small">Linii procesate</div><div class="value">429,435 / 429,435</div></div>
-      <div class="kpi"><div class="small">Viteza COPY</div><div class="value">7,414 linii/s</div></div>
-      <div class="kpi"><div class="small">Debit COPY</div><div class="value">1.70 MB/s</div></div>
+      <div class="kpi"><div class="small">Viteza COPY</div><div class="value">21,872 linii/s</div></div>
+      <div class="kpi"><div class="small">Debit COPY</div><div class="value">5.01 MB/s</div></div>
       <div class="kpi"><div class="small">Dimensiune fisier</div><div class="value">98.39 MB</div></div>
     </div>
 
@@ -61,19 +61,19 @@
         <h2>Etape</h2>
         <table>
           <thead><tr><th>Etapa</th><th>Durata</th></tr></thead>
-          <tbody><tr><td>Create staging</td><td>0.67s</td></tr><tr><td>COPY</td><td>57.98s</td></tr><tr><td>Dedup</td><td>15.22s</td></tr><tr><td>Drop staging</td><td>3.00s</td></tr><tr><td>Commit</td><td>0.03s</td></tr><tr><td>Total</td><td>77.07s</td></tr></tbody>
+          <tbody><tr><td>Create staging</td><td>0.71s</td></tr><tr><td>COPY</td><td>19.67s</td></tr><tr><td>Dedup</td><td>8.38s</td></tr><tr><td>Drop staging</td><td>0.27s</td></tr><tr><td>Commit</td><td>0.04s</td></tr><tr><td>Total</td><td>29.24s</td></tr></tbody>
         </table>
         <h2 style="margin-top:16px">COPY & Dedup</h2>
         <table>
           <thead><tr><th>Indicator</th><th>Valoare</th></tr></thead>
-          <tbody><tr><td>Linii procesate</td><td>429,435 din 429,435</td></tr><tr><td>Durata COPY</td><td>57.92s</td></tr><tr><td>Linii/s</td><td>7,414</td></tr><tr><td>MB/s</td><td>1.70</td></tr><tr><td>Dimensiune fisier</td><td>98.39 MB</td></tr><tr><td>Randuri staging</td><td>429,435</td></tr><tr><td>Randuri dupa dedup</td><td>421,665</td></tr><tr><td>Retentie dupa dedup</td><td>98.2%</td></tr></tbody>
+          <tbody><tr><td>Linii procesate</td><td>429,435 din 429,435</td></tr><tr><td>Durata COPY</td><td>19.63s</td></tr><tr><td>Linii/s</td><td>21,872</td></tr><tr><td>MB/s</td><td>5.01</td></tr><tr><td>Dimensiune fisier</td><td>98.39 MB</td></tr><tr><td>Randuri staging</td><td>429,435</td></tr><tr><td>Randuri dupa dedup</td><td>421,665</td></tr><tr><td>Retentie dupa dedup</td><td>98.2%</td></tr></tbody>
         </table>
       </div>
       <div class="panel">
         <h2>Upserts</h2>
         <table>
           <thead><tr><th>Tabel</th><th>Insertari</th><th>Actualizari</th><th>Durata</th><th>Total dupa</th></tr></thead>
-          <tbody><tr><td>locatii</td><td>0</td><td>255</td><td>1.42s</td><td>255</td></tr><tr><td>cazuri_zilnice</td><td>0</td><td>421,665</td><td>719.93s</td><td>421,665</td></tr><tr><td>testari_zilnice</td><td>0</td><td>421,665</td><td>470.14s</td><td>421,665</td></tr><tr><td>vaccinari_zilnice</td><td>0</td><td>421,665</td><td>489.01s</td><td>421,665</td></tr><tr><td>spitalizari_zilnice</td><td>0</td><td>421,665</td><td>416.90s</td><td>421,665</td></tr><tr><td>mortalitate_exces_zilnica</td><td>0</td><td>421,665</td><td>327.69s</td><td>421,665</td></tr></tbody>
+          <tbody><tr><td>locatii</td><td>255</td><td>255</td><td>0.69s</td><td>255</td></tr><tr><td>cazuri_zilnice</td><td>421,665</td><td>421,665</td><td>101.82s</td><td>421,665</td></tr><tr><td>testari_zilnice</td><td>421,665</td><td>421,665</td><td>76.64s</td><td>421,665</td></tr><tr><td>vaccinari_zilnice</td><td>421,665</td><td>421,665</td><td>75.85s</td><td>421,665</td></tr><tr><td>spitalizari_zilnice</td><td>421,665</td><td>421,665</td><td>59.95s</td><td>421,665</td></tr><tr><td>mortalitate_exces_zilnica</td><td>421,665</td><td>421,665</td><td>58.41s</td><td>421,665</td></tr></tbody>
         </table>
         <h2 style="margin-top:16px">Tabele finale</h2>
         <table>
@@ -85,12 +85,12 @@
   </main>
 
   <script>
-    const stageLabels = ["COPY", "Dedup", "Drop staging", "Create staging", "Commit"];
-    const stageData = [57.98, 15.22, 3.0, 0.67, 0.03];
+    const stageLabels = ["COPY", "Dedup", "Create staging", "Drop staging", "Commit"];
+    const stageData = [19.67, 8.38, 0.71, 0.27, 0.04];
     const phaseLabels = ["COPY", "Dedup", "Upserts", "Commit"];
-    const phaseData = [57.98, 15.22, 2423.68, 0.03];
+    const phaseData = [19.67, 8.38, 372.66, 0.04];
     const upTables = ["locatii", "cazuri", "testari", "vaccinari", "spitalizari", "mortalitate"];
-    const upIns = [0, 0, 0, 0, 0, 0];
+    const upIns = [255, 421665, 421665, 421665, 421665, 421665];
     const upUpd = [255, 421665, 421665, 421665, 421665, 421665];
 
     new Chart(document.getElementById('stagesChart'), {
